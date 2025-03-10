@@ -66,11 +66,22 @@
     align-items: center;
     justify-content: center;
 
-    img {
-      width: 50%;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 5px;
+    .image-container {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-direction: column;
+      height: 400px;
+      width: 100%;
+      overflow-y: scroll;
+      gap: 20px;
+      
+      img {
+        width: 50%;
+        height: 180px;
+        object-fit: contain;
+        border-radius: 5px;
+      }
     }
   }
 }
