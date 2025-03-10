@@ -1,5 +1,6 @@
 import prisma from "../lib/prisma.js"
 import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
 
 export const getPosts = async (req,res) => {
 
@@ -39,7 +40,32 @@ export const getPost = async (req,res) => {
             }
         }
     });
-    res.status(200).json(post)
+
+    //Check if the post saved by the logged in user
+
+    let userId;
+    const token = req.cookies?.token;
+
+    if(!token) {
+        userId = null
+    } else {
+        jwt.verify(token, process.env.JWT_SECRET_KEY, async (err,payload) => {
+            if(err) {
+                userId = null
+            } else {
+                userId = payload.id
+            }
+        })
+    }
+
+    const saved = await prisma.savedPost.findUnique({
+        where: {
+            postId: id,
+            userId
+        }
+    })
+
+    res.status(200).json({...post, isSaved: saved ? true:false})
     try {
         
     } catch (error) {
